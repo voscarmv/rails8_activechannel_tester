@@ -32,7 +32,7 @@ dotenv.config();
 
         const ws = new WebSocket(cableUrl);
 
-        ws.on('open', function open() {
+        ws.on('open', async function open() {
             console.log('Connected to the server');
             // Send a message to the server
             // ws.send(JSON.stringify({ type: 'greeting', payload: 'Hello from Node.js client!' }));
@@ -49,21 +49,21 @@ dotenv.config();
             let output2;
             let headers2;
             try {
-                const response = fetch(url, {
+                const response = await fetch(url, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
                         'Authorization': `Bearer ${token}`,
                     }
                 });
-                // output2 = response.json();
-                // headers2 = response.headers;
+                output2 = await response.json();
+                headers2 = response.headers;
             } catch (e) {
                 console.error(e)
             }
 
-            // console.log(output2);
-            // console.log(headers2);
+            console.log(output2);
+            console.log(headers2.get('authorization'));
         });
 
         ws.on('message', function incoming(data) {
