@@ -24,8 +24,27 @@ dotenv.config();
         }
         console.log(output);
 
-
         const token = `${output.data.token}`;
+
+        let output2;
+        let headers2;
+        try {
+            const response = await fetch(url, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                }
+            });
+            output2 = await response.json();
+            headers2 = response.headers;
+        } catch (e) {
+            console.error(e)
+        }
+
+        console.log(output2);
+        console.log(headers2);
+
         const cableUrl = `${process.env.WS}/cable?token=${token}`;
 
         const ws = new WebSocket(cableUrl);
@@ -48,24 +67,9 @@ dotenv.config();
             console.log('Received:', data.toString());
         });
 
-        let output2;
-        let headers2;
-        try {
-            const response = await fetch(url, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`,
-                }
-            });
-            output2 = await response.json();
-            headers2 = response.headers;
-        } catch (e) {
-            console.error(e)
-        }
+// Try to reset token here
 
-        console.log(output2);
-        console.log(headers2);
+
 
         // const consumer = createConsumer(cableUrl);
         // const subscription = consumer.subscriptions.create(
