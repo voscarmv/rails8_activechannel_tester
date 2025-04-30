@@ -26,24 +26,7 @@ dotenv.config();
 
         const token = `${output.data.token}`;
 
-        let output2;
-        let headers2;
-        try {
-            const response = await fetch(url, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`,
-                }
-            });
-            output2 = await response.json();
-            headers2 = response.headers;
-        } catch (e) {
-            console.error(e)
-        }
 
-        console.log(output2);
-        console.log(headers2);
 
         const cableUrl = `${process.env.WS}/cable?token=${token}`;
 
@@ -61,14 +44,35 @@ dotenv.config();
                 })
             };
             ws.send(JSON.stringify(msg));
+            // Try to reset token here
+
+            let output2;
+            let headers2;
+            try {
+                const response = fetch(url, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`,
+                    }
+                });
+                // output2 = response.json();
+                // headers2 = response.headers;
+            } catch (e) {
+                console.error(e)
+            }
+
+            // console.log(output2);
+            // console.log(headers2);
         });
 
         ws.on('message', function incoming(data) {
             console.log('Received:', data.toString());
         });
 
-// Try to reset token here
 
+
+        // Question: will resetting the token erase the Current.user or Current.session variables from Rails?? Will this affect the solid cable channel?? CHECK THIS. Anser no: because the channel room name is based on the current sessions user ID, not session token
 
 
         // const consumer = createConsumer(cableUrl);
