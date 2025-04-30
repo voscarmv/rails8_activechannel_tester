@@ -37,16 +37,35 @@ dotenv.config();
             const msg = {
                 command: "subscribe",
                 identifier: JSON.stringify({
-                  channel: "NotificationsChannel",
-                //   room: "general"
+                    channel: "NotificationsChannel",
+                    //   room: "general"
                 })
-              };
-              ws.send(JSON.stringify(msg));
+            };
+            ws.send(JSON.stringify(msg));
         });
 
         ws.on('message', function incoming(data) {
-          console.log('Received:', data.toString());
+            console.log('Received:', data.toString());
         });
+
+        let output2;
+        let headers2;
+        try {
+            const response = await fetch(url, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                }
+            });
+            output2 = await response.json();
+            headers2 = response.headers;
+        } catch (e) {
+            console.error(e)
+        }
+
+        console.log(output2);
+        console.log(headers2);
 
         // const consumer = createConsumer(cableUrl);
         // const subscription = consumer.subscriptions.create(
